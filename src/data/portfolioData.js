@@ -81,7 +81,7 @@ export const projectsData = [
       "SEO optimized structure and fully responsive mobile-first layout"
     ],
     github: "https://github.com/niraj0050/portfolio",
-    demo: "https://nirajbalistar.dev"
+    demo: "https://niraj0050.vercel.app/"
   },
   {
     id: "ml-mini-project",
