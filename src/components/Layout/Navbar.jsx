@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Sun, Moon, Menu, X, FileText, Code2 } from 'lucide-react';
+import resume from './../../../public/resume/resume.pdf';
 
 export default function Navbar({ theme, toggleTheme }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -115,7 +116,7 @@ export default function Navbar({ theme, toggleTheme }) {
 
           {/* Download Resume Button */}
           <a
-            href="/resume.pdf"
+            href={resume}
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-outline"
