@@ -69,7 +69,7 @@ export default function Navbar({ theme, toggleTheme }) {
               }}
             />
           </div>
-          <span>Niraj<span className="gradient-text">.Dev</span></span>
+          <span>Niraj<span className="gradient-text">Kumar</span></span>
         </NavLink>
 
         {/* Desktop Nav Links */}
