@@ -9,12 +9,19 @@ export default function SectionHeader({ badge, title, subtitle, center = true })
         </span>
       )}
       {title && (
-        <h2 style={{ fontSize: '2.25rem', marginBottom: '0.75rem' }}>
+        <h2 
+          style={{ 
+            fontSize: 'clamp(2rem, 3.8vw, 2.75rem)', 
+            marginBottom: '1rem', 
+            letterSpacing: '-0.025em',
+            lineHeight: '1.2'
+          }}
+        >
           {title}
         </h2>
       )}
       {subtitle && (
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.6' }}>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '1.08rem', lineHeight: '1.7', maxWidth: '680px', margin: center ? '0 auto' : '0' }}>
           {subtitle}
         </p>
       )}
