@@ -5,21 +5,24 @@
    ========================================================================== */
 
 .cinematic-intro-root {
-  position: relative;
+  position: fixed;
+  inset: 0;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   background-color: #050508;
   color: #f8fafc;
   font-family: var(--font-body, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
-  overflow-x: hidden;
+  overflow: hidden;
   user-select: text;
+  touch-action: none;
 }
 
-/* 1. SCROLL DRIVER TRACK (500vh distance for natural scroll control) */
+/* 1. SCROLL DRIVER TRACK (Virtual progress replaces native scroll track) */
 .cinematic-intro-scroll-track {
-  position: relative;
-  width: 100%;
-  height: 500vh;
+  display: none;
+  width: 0;
+  height: 0;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
@@ -192,6 +195,13 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
+.cinematic-intro-hud-btn-mobile {
+  display: none;
+}
+.cinematic-intro-hud-btn-desktop {
+  display: inline;
+}
+
 .cinematic-intro-hud-primary-btn {
   display: inline-flex;
   align-items: center;
@@ -303,6 +313,20 @@
   border-radius: 10px;
   padding: 1.25rem 1.4rem;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+}
+
+/* Progressive Hero Reveal Dock Synchronization */
+.cinematic-intro-card-dock.hero-pre-reveal {
+  opacity: 0 !important;
+  transform: translateY(16px);
+  pointer-events: none !important;
+}
+
+.cinematic-intro-card-dock.hero-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
 }
 
 /* Strict visibility classes */
@@ -787,6 +811,19 @@
 }
 
 /* Responsive Media Queries */
+@media (max-height: 800px) and (min-width: 769px) {
+  .cinematic-intro-panel {
+    bottom: 1.15rem;
+  }
+  .cinematic-intro-card-dock {
+    padding: 1.05rem 1.25rem;
+    gap: 0.75rem;
+  }
+  .cinematic-intro-scroll-cue {
+    bottom: 1.15rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .cinematic-intro-hud {
     padding: 0 1.5rem;
@@ -806,8 +843,49 @@
 
 @media (max-width: 768px) {
   .cinematic-intro-hud {
-    padding: 0 1rem;
-    height: 60px;
+    padding: 0 0.5rem;
+    height: 54px;
+  }
+  .cinematic-intro-brand {
+    gap: 0.4rem;
+    flex-shrink: 0;
+  }
+  .cinematic-intro-brand-logo {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+  .cinematic-intro-brand-name {
+    display: none;
+  }
+  .cinematic-intro-brand-tag {
+    display: none;
+  }
+  .cinematic-intro-hud-actions {
+    gap: 0.3rem;
+    flex-shrink: 0;
+  }
+  .cinematic-intro-toggle-ui-btn,
+  .cinematic-intro-audio-btn {
+    padding: 0.3rem 0.45rem;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+  }
+  .cinematic-intro-toggle-ui-btn span,
+  .cinematic-intro-audio-btn span {
+    display: none;
+  }
+  .cinematic-intro-hud-btn-mobile {
+    display: inline;
+  }
+  .cinematic-intro-hud-btn-desktop {
+    display: none;
+  }
+  .cinematic-intro-hud-primary-btn {
+    padding: 0.32rem 0.6rem;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .cinematic-intro-hud-link {
     display: none;
@@ -816,26 +894,106 @@
     display: none;
   }
   .cinematic-intro-ui-stage {
-    top: 60px;
-    height: calc(100vh - 60px);
+    top: 56px;
+    height: calc(100vh - 56px);
   }
   .cinematic-intro-panel {
-    left: 1rem;
-    width: calc(100vw - 2rem);
+    left: 0.85rem;
+    right: 0.85rem;
+    bottom: 0.85rem;
+    width: auto;
     max-width: none;
-    max-height: 80vh;
+    max-height: 44vh;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
-  .cinematic-intro-project-item {
-    flex-direction: column;
-    align-items: flex-start;
+  .cinematic-intro-card-dock {
+    padding: 0.95rem 1rem;
+    border-radius: 14px;
+  }
+  .cinematic-intro-supporting-statement {
+    font-size: 0.86rem;
+    line-height: 1.45;
+    margin-bottom: 0.65rem;
+    padding-left: 0.75rem;
+  }
+  .cinematic-intro-verification-note {
+    font-size: 0.74rem;
+    line-height: 1.45;
+    margin-bottom: 0.85rem;
+  }
+  .cinematic-intro-cta-group {
+    gap: 0.45rem;
+  }
+  .cinematic-intro-btn-primary,
+  .cinematic-intro-btn-secondary {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.74rem;
+  }
+  .cinematic-intro-about-grid {
+    gap: 0.55rem;
+    margin-bottom: 0.85rem;
+  }
+  .cinematic-intro-about-card {
+    padding: 0.8rem 0.9rem;
+    border-radius: 10px;
+  }
+  .cinematic-intro-about-card-title {
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+  }
+  .cinematic-intro-about-card-text {
+    font-size: 0.74rem;
+    line-height: 1.4;
+  }
+  .cinematic-intro-two-col {
+    max-height: 34vh;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+  }
+  .cinematic-intro-timeline-box,
+  .cinematic-intro-skills-cluster {
+    padding: 0.8rem 0.9rem;
+    border-radius: 10px;
+  }
+  .cinematic-intro-timeline-role {
+    font-size: 0.85rem;
+  }
+  .cinematic-intro-timeline-desc {
+    font-size: 0.74rem;
   }
   .cinematic-intro-scroll-cue {
-    left: 1rem;
-    bottom: 1rem;
+    display: none;
   }
   .cinematic-intro-gate-box {
-    padding: 1.5rem 1.2rem;
+    padding: 1.15rem 1rem;
+    border-radius: 14px;
+  }
+  .cinematic-intro-contact-list {
+    gap: 0.55rem;
+    margin: 0.75rem 0 0.95rem 0;
+  }
+  .cinematic-intro-contact-row {
+    font-size: 0.78rem;
+  }
+  .cinematic-intro-contact-icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cinematic-intro-toggle-ui-btn span,
+  .cinematic-intro-audio-btn span {
+    display: none;
+  }
+  .cinematic-intro-toggle-ui-btn,
+  .cinematic-intro-audio-btn {
+    padding: 0.4rem;
+    border-radius: 50%;
+  }
+  .cinematic-intro-hud-primary-btn span {
+    font-size: 0.72rem;
   }
 }
 
