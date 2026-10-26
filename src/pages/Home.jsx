@@ -104,19 +104,21 @@ export default function Home() {
       
       {/* SECTION 1: HERO BANNER (Full-Bleed 3D Background Experience matching Reference) */}
       <section 
+        className="hero-section-wrapper"
         onMouseMove={handleHeroMouseMove}
         onMouseLeave={handleHeroMouseLeave}
         style={{ 
           minHeight: 'calc(100vh - 80px)', 
           display: 'flex', 
           alignItems: 'center', 
-          position: 'relative',
+          position: 'relative', 
           padding: '2.5rem 0 3.5rem 0',
           overflow: 'hidden'
         }}
       >
         {/* Full-Bleed 3D Scene Background (Spans edge-to-edge, top-to-bottom) */}
         <div 
+          className="hero-3d-container"
           style={{
             position: 'absolute',
             inset: 0,
@@ -294,7 +296,7 @@ export default function Home() {
 
         {/* Foreground Hero Content (Left-Aligned, Unobstructed, Crisp Readability) */}
         <div className="container" style={{ position: 'relative', zIndex: 3, pointerEvents: 'none' }}>
-          <div style={{ maxWidth: '580px', pointerEvents: 'auto' }}>
+          <div className="hero-text-block" style={{ maxWidth: '580px', pointerEvents: 'auto' }}>
             
             {/* Status Pill Badge */}
             <div 
@@ -319,10 +321,10 @@ export default function Home() {
             {/* Main Headline */}
             <h1 
               style={{ 
-                fontSize: 'clamp(3.0rem, 6.2vw, 5.0rem)', 
+                fontSize: 'clamp(2.4rem, 6vw, 5.0rem)', 
                 fontWeight: 900, 
                 marginBottom: '0.55rem', 
-                lineHeight: '1.05',
+                lineHeight: '1.08',
                 letterSpacing: '-0.03em',
                 color: '#ffffff'
               }}
@@ -333,7 +335,7 @@ export default function Home() {
             {/* Developer Title */}
             <h2 
               style={{ 
-                fontSize: 'clamp(1.75rem, 3.2vw, 2.35rem)', 
+                fontSize: 'clamp(1.35rem, 3.2vw, 2.35rem)', 
                 fontWeight: 700, 
                 marginBottom: '1.35rem', 
                 color: '#f8fafc',
@@ -347,9 +349,9 @@ export default function Home() {
             <p 
               style={{ 
                 color: '#94a3b8', 
-                fontSize: '1.08rem', 
-                marginBottom: '2.35rem', 
-                lineHeight: '1.7', 
+                fontSize: 'clamp(0.92rem, 2.2vw, 1.08rem)', 
+                marginBottom: '2.0rem', 
+                lineHeight: '1.65', 
                 maxWidth: '520px' 
               }}
             >
@@ -357,7 +359,7 @@ export default function Home() {
             </p>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', gap: '1.15rem', flexWrap: 'wrap', marginBottom: '3.0rem', alignItems: 'center' }}>
+            <div className="hero-action-buttons" style={{ display: 'flex', gap: '1.15rem', flexWrap: 'wrap', marginBottom: '2.4rem', alignItems: 'center' }}>
               <button 
                 onClick={scrollToProjects} 
                 className="btn"

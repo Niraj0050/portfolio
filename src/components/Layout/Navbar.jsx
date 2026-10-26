@@ -145,7 +145,7 @@ export default function Navbar({ theme, toggleTheme }) {
           </a>
 
           {/* Theme Toggle Button */}
-          <button
+          {/* <button
             onClick={toggleTheme}
             aria-label="Toggle Theme"
             style={{
@@ -164,7 +164,7 @@ export default function Navbar({ theme, toggleTheme }) {
             onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)'}
           >
             {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
-          </button>
+          </button> */}
 
           {/* Mobile Menu Toggle */}
           <button

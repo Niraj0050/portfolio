@@ -310,10 +310,11 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
     scene.add(cursorLight);
 
     // 5. Responsive Layout Coordinates:
-    // Guarantees EXACT equal space on left (distance from text to model) and right (distance from model to screen edge)
+    // Guarantees EXACT equal space on left and right, with tailored mobile positioning
     const computeLayout = (w, h) => {
       const asp = w / h;
-      const dist = 10.4;
+      const isMobile = w < 768 || asp < 0.95;
+      const dist = isMobile ? 10.5 : 10.4;
       const vFovRad = (fov * Math.PI) / 180;
       const visibleHeight = 2 * Math.tan(vFovRad / 2) * dist;
       const visibleWidth = visibleHeight * asp;
@@ -322,39 +323,30 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
       let offsetY = 0.15;
       let stageY = -2.85;
 
-      if (w < 768 || asp < 0.95) {
-        // Mobile portrait: center horizontally, place slightly lower
+      if (isMobile) {
+        // Mobile portrait: center horizontally and vertically in initial mobile viewport
         offsetX = 0;
-        offsetY = -0.65;
-        stageY = -3.45;
+        offsetY = 0.25;
+        stageY = -2.85;
       } else {
         // Desktop / Tablet:
         // Container: max-width 1240px, centered with 24px padding
         const containerMargin = Math.max((w - 1240) / 2, 0);
         const textLeftPx = containerMargin + 24;
-        // The text block has max-width: 580px, with content taking ~540px
         const textWidthPx = Math.min(540, w * 0.42);
         const textRightPx = textLeftPx + textWidthPx;
 
         // Space available to the right of the text
         const remainingRightPx = Math.max(w - textRightPx, 100);
-
-        // Center point of this right space:
-        // Distance from text to targetCenterPx == remainingRightPx / 2
-        // Distance from targetCenterPx to screen right edge == remainingRightPx / 2
-        // EXACT EQUAL BREATHING ROOM ON BOTH SIDES!
         const targetCenterPx = textRightPx + remainingRightPx / 2;
 
-        // Convert targetCenterPx into NDC (-1 to +1)
         const ndcX = (targetCenterPx / w) * 2 - 1;
-
-        // Convert NDC to 3D world X at z = 0
         offsetX = ndcX * (visibleWidth / 2);
         offsetY = 0.15;
         stageY = -2.85;
       }
 
-      return { offsetX, offsetY, stageY, dist, visibleWidth, visibleHeight };
+      return { offsetX, offsetY, stageY, dist, visibleWidth, visibleHeight, isMobile };
     };
 
     let layout = computeLayout(initialWidth, initialHeight);
@@ -369,6 +361,7 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
     // Each child object inside modelRoot moves with its own INDEPENDENT motion!
     const modelRoot = new THREE.Group();
     modelRoot.position.set(layout.offsetX, layout.offsetY, 0);
+    modelRoot.scale.setScalar(layout.isMobile ? 0.95 : 1.0);
     scene.add(modelRoot);
 
     // B. stageGroup: Anchored on the floor beneath sculpture (hidden/removed as requested)
@@ -1278,6 +1271,7 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
       camera.lookAt(0, 0, 0);
 
       modelRoot.position.set(layout.offsetX, layout.offsetY, 0);
+      modelRoot.scale.setScalar(layout.isMobile ? 0.95 : 1.0);
       stageGroup.position.set(layout.offsetX, layout.stageY, 0);
       shockwaveGroup.position.set(layout.offsetX, layout.offsetY, 0);
       coreLight.position.set(layout.offsetX, layout.offsetY, 0);

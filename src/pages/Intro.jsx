@@ -113,24 +113,13 @@ export default function Intro() {
         {/* Global Minimal Header */}
         <header>
           <button 
-            className="brand" 
+            className="brand intro-brand-btn" 
             onClick={backToSpace} 
             aria-label="Return to the universe"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              fontWeight: 800,
-              fontSize: '1.25rem',
-              fontFamily: 'var(--font-heading, "Space Grotesk", sans-serif)',
-              letterSpacing: '0.5px',
-              textTransform: 'none'
-            }}
           >
             <div 
+              className="intro-brand-logo-box"
               style={{
-                width: '38px',
-                height: '38px',
                 borderRadius: '8px',
                 display: 'flex',
                 alignItems: 'center',
@@ -150,7 +139,7 @@ export default function Intro() {
                 }}
               />
             </div>
-            <span style={{ color: '#fff' }}>Niraj <span style={{ color: '#ff6b2b' }}>Kumar</span></span>
+            <span className="intro-brand-name">Niraj <span style={{ color: '#ff6b2b' }}>Kumar</span></span>
           </button>
           
           <div className="header-nav">
