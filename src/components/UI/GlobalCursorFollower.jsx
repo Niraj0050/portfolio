@@ -132,9 +132,23 @@ export default function GlobalCursorFollower() {
 
       ctx.clearRect(0, 0, width, height);
 
-      // On Home hero section, HeroScene's authentic 3D beacon & ribbon handles it with full depth
-      const isHomeHero = window.location.pathname === '/' && window.scrollY < 320;
-      if (!hasMoved || !isVisible || isHomeHero) {
+      // Only show the cursor follower in the Hero section of the Home page
+      const heroSection = document.getElementById('hero');
+      let isInHero = false;
+      if (heroSection) {
+        const rect = heroSection.getBoundingClientRect();
+        isInHero = (
+          targetY >= rect.top &&
+          targetY <= rect.bottom &&
+          targetX >= rect.left &&
+          targetX <= rect.right
+        );
+      } else {
+        // Fallback: only top of home page
+        isInHero = window.location.pathname === '/' && window.scrollY < window.innerHeight;
+      }
+
+      if (!hasMoved || !isVisible || !isInHero) {
         return;
       }
 

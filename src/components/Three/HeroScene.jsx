@@ -371,11 +371,11 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
     modelRoot.position.set(layout.offsetX, layout.offsetY, 0);
     scene.add(modelRoot);
 
-    // B. stageGroup: Anchored and 100% stationary on the floor beneath sculpture
-    // "niche ka ring stable hai move nahi ho raha"
+    // B. stageGroup: Anchored on the floor beneath sculpture (hidden/removed as requested)
     const stageGroup = new THREE.Group();
     stageGroup.position.set(layout.offsetX, layout.stageY, 0);
     stageGroup.rotation.x = -Math.PI * 0.44; // Fixed isometric floor perspective
+    stageGroup.visible = false;
     scene.add(stageGroup);
 
     // Core point light attached to model location
@@ -383,9 +383,10 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
     coreLight.position.set(layout.offsetX, layout.offsetY, 0);
     scene.add(coreLight);
 
-    // Subtle warm crimson floor reflection light on the stage
-    const floorReflectLight = new THREE.PointLight(0x991b1b, 3.5, 4.5);
+    // Subtle warm crimson floor reflection light on the stage (disabled with base)
+    const floorReflectLight = new THREE.PointLight(0x991b1b, 0, 4.5);
     floorReflectLight.position.set(layout.offsetX, layout.stageY + 0.5, 0.5);
+    floorReflectLight.visible = false;
     scene.add(floorReflectLight);
 
     // ==========================================
@@ -1203,18 +1204,47 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
       container.style.cursor = "grabbing";
     };
 
+    // When scrolling or window loses focus, cancel dragging state cleanly
+    const handleScrollCancel = () => {
+      isDragging = false;
+      container.style.cursor = isHoveringDiamond ? "pointer" : "default";
+    };
+
     const handlePointerUp = (e) => {
       const moveDist = Math.hypot(e.clientX - pointerDownPos.x, e.clientY - pointerDownPos.y);
       isDragging = false;
       container.style.cursor = isHoveringDiamond ? "pointer" : "default";
 
-      // If clicked without dragging (threshold < 6px)
-      if (moveDist < 6) {
-        raycaster.setFromCamera(mouseNdc, camera);
-        const hits = raycaster.intersectObjects([topOuterGem, bottomOuterGem, innerCore, chevronMesh], true);
-        if (hits.length > 0) {
-          triggerShockwave();
-          onToggleExplodeRef.current?.();
+      // If clicked without dragging (threshold < 20px)
+      if (moveDist < 20) {
+        const rect = container.getBoundingClientRect();
+        // Check if click was within container bounds
+        if (
+          e.clientX >= rect.left &&
+          e.clientX <= rect.right &&
+          e.clientY >= rect.top &&
+          e.clientY <= rect.bottom
+        ) {
+          const upNdcX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          const upNdcY = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+          const clickRaycaster = new THREE.Raycaster();
+          clickRaycaster.setFromCamera(new THREE.Vector2(upNdcX, upNdcY), camera);
+
+          const clickableTargets = [
+            topOuterGem, 
+            bottomOuterGem, 
+            innerCore, 
+            chevronMesh, 
+            innerLattice,
+            ring1,
+            ring2,
+            ring3
+          ];
+          const hits = clickRaycaster.intersectObjects(clickableTargets, true);
+          if (hits.length > 0) {
+            triggerShockwave();
+            onToggleExplodeRef.current?.();
+          }
         }
       }
     };
@@ -1225,6 +1255,7 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
     window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerup", handlePointerUp);
     window.addEventListener("pointercancel", handlePointerUp);
+    window.addEventListener("scroll", handleScrollCancel, { passive: true });
 
     // ==========================================
     // I. DYNAMIC VIEWPORT RESIZING (Equal Margins on Both Sides)
@@ -1290,9 +1321,10 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
       const dt = Math.min(clock.getDelta(), 0.1);
       const t = clock.getElapsedTime();
 
-      // Exploded View smooth interpolation
+      // Exploded View smooth interpolation (~1.0s organic easing)
       const targetExplode = isExplodedRef.current ? 1.0 : 0.0;
-      currentExplode += (targetExplode - currentExplode) * 0.075;
+      const explodeSpeed = 1.0 - Math.exp(-dt * 3.5);
+      currentExplode += (targetExplode - currentExplode) * explodeSpeed;
 
       // Shockwave Pulse Animation (Concept 2: Core Overdrive Shockwave Pulse)
       let shockwaveOverdrive = 0.0;
@@ -1343,7 +1375,7 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
 
       // Layer 03: Core scaling & incandescent overdrive
       const corePulse = 1.0 + Math.sin(t * 2.2) * 0.035;
-      const coreScale = (1.0 + currentExplode * 0.18) * corePulse;
+      const coreScale = corePulse;
       coreGroup.scale.set(coreScale, coreScale, coreScale);
 
       const baseCoreGlow = 2.4 + Math.sin(t * 2.2) * 0.4 + currentExplode * 1.8 + shockwaveOverdrive;
@@ -1359,7 +1391,7 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
       ring1Group.position.y = Math.sin(t * 0.95 + 1.2) * 0.045 + currentExplode * 0.22;
       ring1.rotation.z += 0.0016; // Spins smoothly on its own plane
       ring1Group.rotation.z = Math.sin(t * 0.65 + 0.4) * 0.02;
-      ring1Group.scale.setScalar(1.0 + currentExplode * 0.28);
+      ring1Group.scale.setScalar(1.0);
 
       // ====================================================
       // 3. INDEPENDENT MOTION: Diagonal Chrome Ring
@@ -1367,14 +1399,14 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
       // ====================================================
       ring2Group.position.y = Math.sin(t * 0.85 + 2.5) * 0.05 - currentExplode * 0.22;
       ring2.rotation.z += 0.0024;
-      ring2Group.scale.setScalar(1.0 + currentExplode * 0.22);
+      ring2Group.scale.setScalar(1.0);
 
       // ====================================================
       // 4. INDEPENDENT MOTION: Outer Trajectory Guide Ring
       // ====================================================
       ring3Group.position.y = Math.sin(t * 0.7 + 3.0) * 0.035;
       ring3.rotation.z -= 0.0014;
-      ring3Group.scale.setScalar(1.0 + currentExplode * 0.15);
+      ring3Group.scale.setScalar(1.0);
 
       // ====================================================
       // 5. USER DRAG INERTIA on ModelRoot
@@ -1607,6 +1639,7 @@ export default function HeroScene({ isExploded = false, onToggleExplode }) {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
       window.removeEventListener("pointercancel", handlePointerUp);
+      window.removeEventListener("scroll", handleScrollCancel);
       scene.environment = null;
       envTarget.dispose();
       pmrem.dispose();

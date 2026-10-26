@@ -1,0 +1,14 @@
+/* The scene owns the screen; interface details stay at its edges. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+main{background:#02040a;isolation:isolate}
+main::before{content:'';position:absolute;inset:-15%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 61% 44%,#12435425 0,transparent 34%),radial-gradient(ellipse at 24% 70%,#26395b26 0,transparent 26%),radial-gradient(ellipse at 78% 21%,#1c1e422b 0,transparent 30%);filter:blur(35px);transform:rotate(-24deg)}
+main::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 30%,#01030888 100%);z-index:1}
+.universe{z-index:0}
+main::after{background:radial-gradient(ellipse at center,transparent 45%,#01030833 100%)}
+header{top:30px}.brand{font-size:16px;letter-spacing:5px}.brand-mark{font-size:29px}.header-note{font-size:8px;letter-spacing:3px;opacity:.7}.live{font-size:8px;letter-spacing:2px}
+.intro{left:0;right:0;top:15%;text-align:center;z-index:2}.eyebrow{font-size:8px;letter-spacing:4px;margin:0 0 14px;color:#7eabb9}h1{font-size:clamp(22px,2.3vw,34px);font-weight:400;letter-spacing:-.8px}.description{font-size:10px;letter-spacing:1px;margin:12px 0 0;color:#728894}
+.coordinates{top:43%;opacity:.7;z-index:2;font-size:7px;letter-spacing:2px}
+.keyboard-pulse{left:50%;transform:translateX(-50%);bottom:115px;z-index:3;font-size:9px;letter-spacing:2px;color:#a4d2dc;border-color:#91f3ef33}.keyboard-pulse span{margin-left:22px}
+footer{z-index:3;bottom:24px;padding-top:18px;font-size:8px}.instructions{font-size:8px;letter-spacing:1.5px}.status{color:#a1b8c3}.status i{height:4px;width:4px}
+@media(max-width:760px){header{top:20px;left:6%;right:6%}.brand{font-size:13px;letter-spacing:3px}.brand-mark{font-size:24px}.live{font-size:7px;letter-spacing:1px}.intro{top:17%;left:6%;right:6%}.eyebrow{font-size:7px;letter-spacing:2px}h1{font-size:26px;letter-spacing:-.5px}.description{font-size:9px}.keyboard-pulse{bottom:150px;left:50%;white-space:nowrap;font-size:8px}footer{left:6%;right:6%;bottom:18px}.instructions{bottom:68px;gap:18px;font-size:7px}.status{font-size:7px;letter-spacing:.4px}footer button{padding-right:0}}
+@media(max-height:650px) and (min-width:761px){.intro{top:16%}.description{display:none}.keyboard-pulse{bottom:84px}footer{bottom:18px}.eyebrow{margin-bottom:8px}}

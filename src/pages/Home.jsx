@@ -133,16 +133,15 @@ export default function Home() {
         </div>
 
         {/* Exploded Architecture HUD Callouts (Option 4: Software Architecture Metaphor) */}
-        {isArchitectureExploded && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              pointerEvents: 'none',
-              zIndex: 3,
-            }}
-          >
-            {/* Desktop Callout Cards positioned around 3D sculpture */}
+        <div
+          className={`arch-hud-container ${isArchitectureExploded ? 'is-visible' : ''}`}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 3,
+          }}
+        >
+          {/* Desktop Callout Cards positioned around 3D sculpture */}
             <div className="arch-hud-desktop">
               {architectureLayers.map((layer) => (
                 <div
@@ -223,6 +222,7 @@ export default function Home() {
               {architectureLayers.map((layer) => (
                 <div
                   key={layer.id}
+                  className="arch-hud-mobile-card"
                   style={{
                     minWidth: '260px',
                     maxWidth: '280px',
@@ -262,7 +262,6 @@ export default function Home() {
               ))}
             </div>
           </div>
-        )}
 
         {/* Interactive Pointer Ambient Aura Follower */}
         <div 
